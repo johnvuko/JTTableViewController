@@ -61,6 +61,11 @@ if(__nextPageLoaderCell){\
 @property (nonatomic, readonly) BOOL isLoading;
 
 /*!
+ * Reset results and haveMoreData.
+ */
+- (void)resetData;
+
+/*!
  * This method is supposed to be call after a successful call to startFetchingResults. If results is empty noResultsView will be shown.
  * @param  results Data store in results.
  * @param  haveMoreData Indicate if there is more data to load.

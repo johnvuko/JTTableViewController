@@ -43,6 +43,14 @@
     self.nextPageLoaderOffset = 3;
 }
 
+- (void)resetData
+{
+    self->_isLoading = NO;
+    self->_haveMoreData = NO;
+    [self.results removeAllObjects];
+    [self.tableView reloadData];
+}
+
 #pragma mark - TableView
 
 - (void)setTableView:(UITableView *)tableView
