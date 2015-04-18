@@ -36,7 +36,7 @@ With [CocoaPods](http://cocoapods.org/), add this line to your Podfile.
 
 @implementation ViewController
 
-// If you don't implement this method UITableViewAutomaticDimension will return by default
+// If you don't implement this method, UITableViewAutomaticDimension will return by default
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // Automatically return the height of nextPageLoaderCell, by default use UITableViewAutomaticDimension
@@ -88,7 +88,7 @@ With [CocoaPods](http://cocoapods.org/), add this line to your Podfile.
 
 You have to bind the `tableView` with the controller, automatically it will set the delegate and the dataSource.
 
-You have to implement `startFetchingResults` and `startFetchingNextResults` methods. They are used to load data (from your web service for example). Theses methods must call `super`.
+You have to implement `startFetchingResults` and `startFetchingNextResults` methods. They are used to load data (from your web service for example). These methods must call `super`.
 
 `startFetchingResults` is used to retrieve new data (erase all previous data) whereas `startFetchingNextResults` is used for get more data (the pagination).
 
