@@ -88,7 +88,7 @@
     if(indexPath.row == [self.results count]){
         return self.nextPageLoaderCell;
     }
-    else if(!self.isLoading && indexPath.row >= self.results.count - self.nextPageLoaderOffset){
+    else if(!self.isLoading && indexPath.row >= self.results.count - self.nextPageLoaderOffset && self.haveMoreData){
         [self startFetchingNextResults];
     }
     
