@@ -100,6 +100,8 @@
 
 - (void)setNoResultsView:(UIView *)noResultsView
 {
+    NSAssert(!self.tableView, @"You have to set the tableView first");
+
     self->_noResultsView = noResultsView;
     [self.tableView.superview addSubview:self.noResultsView];
     
@@ -127,6 +129,8 @@
 
 - (void)setNoResultsLoadingView:(UIView *)noResultsLoadingView
 {
+    NSAssert(!self.tableView, @"You have to set the tableView first");
+    
     self->_noResultsLoadingView = noResultsLoadingView;
     [self.tableView.superview addSubview:self.noResultsLoadingView];
     
