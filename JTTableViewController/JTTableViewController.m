@@ -43,6 +43,16 @@
     self.nextPageLoaderOffset = 3;
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+
+    // If startFetchingResults was called before the view exist
+    if(self.results.count == 0 && self.isLoading){
+        [self showNoResultsLoadingView];
+    }
+}
+
 - (void)resetData
 {
     self->_isLoading = NO;
