@@ -125,3 +125,7 @@ You can also override some methods:
 ## License
 
 JTTableViewController is released under the MIT license. See the LICENSE file for more info.
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/jonathantribouharet/jttableviewcontroller/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
