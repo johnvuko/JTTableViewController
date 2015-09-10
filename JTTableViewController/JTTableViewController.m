@@ -7,7 +7,7 @@
 
 #import "JTTableViewController.h"
 
-#import <Masonry.h>
+#import "Masonry.h"
 
 @implementation JTTableViewController
 
