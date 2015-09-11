@@ -11,6 +11,11 @@
 
 #pragma mark - JTTableViewController
 
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    return self.results.count;
+}
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     if (self.haveMoreData && self.nextPageLoaderCell && self.results.count == section + 1) {
