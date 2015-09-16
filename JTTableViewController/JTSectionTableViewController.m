@@ -27,11 +27,18 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (self.results.count != indexPath.section + 1) { return nil; }
+    if (self.results.count < indexPath.section + 1) { return nil; }
     
     if (indexPath.row == [self.results[indexPath.section] count]) {
         return self.nextPageLoaderCell;
-    } else if (!self.isLoading && indexPath.row >= [self.results[indexPath.section] count] - self.nextPageLoaderOffset && self.haveMoreData) {
+    }
+    
+    BOOL fetchNextResults = !self.isLoading;
+    fetchNextResults &= self.haveMoreData;
+    fetchNextResults &= self.results.count == indexPath.section + 1; // Is last section?
+    fetchNextResults &= [self.results[indexPath.section] count] < indexPath.row + self.nextPageLoaderOffset; // Is row index >= rows count?
+    
+    if (fetchNextResults) {
         [self startFetchingNextResults];
     }
     
