@@ -84,13 +84,12 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{    
-    CGFloat nextPageLoaderCellHeight = CGRectGetHeight(self.nextPageLoaderCell.frame);
-    if(indexPath.row == [self.results count] && nextPageLoaderCellHeight > 0){
-        return nextPageLoaderCellHeight;
+{
+    if(indexPath.row == [self.results count]){
+        return CGRectGetHeight(self.nextPageLoaderCell.frame);
     }
 
-    return UITableViewAutomaticDimension;
+    return [self jt_tableView:tableView heightForRowAtIndexPath:indexPath];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -102,7 +101,7 @@
         [self startFetchingNextResults];
     }
     
-    return nil;
+    return [self jt_tableView:tableView cellForRowAtIndexPath:indexPath];
 }
 
 #pragma mark - NoResultsView
@@ -216,6 +215,18 @@
 - (void)endRefreshing
 {
     
+}
+
+#pragma mark - Swift compat
+
+- (CGFloat)jt_tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return UITableViewAutomaticDimension;
+}
+
+- (UITableViewCell *)jt_tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return nil;
 }
 
 @end

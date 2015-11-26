@@ -21,6 +21,8 @@ With [CocoaPods](http://cocoapods.org/), add this line to your Podfile.
 
 ### Basic usage
 
+#### Objective-C
+
 ```objective-c
 #import <UIKit/UIKit.h>
 
@@ -39,7 +41,7 @@ With [CocoaPods](http://cocoapods.org/), add this line to your Podfile.
 // If you don't implement this method, UITableViewAutomaticDimension will return by default
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    // Automatically return the height of nextPageLoaderCell, by default use UITableViewAutomaticDimension
+    // Automatically return the height of nextPageLoaderCell, else return UITableViewAutomaticDimension
     JTTABLEVIEW_heightForRowAtIndexPath
     
     return 44.;
@@ -71,7 +73,7 @@ With [CocoaPods](http://cocoapods.org/), add this line to your Podfile.
     }];
 }
 
-// Must be implemented
+// Must be implemented if haveMoreData
 - (void)startFetchingNextResults
 {
     [super startFetchingNextResults];
@@ -83,6 +85,61 @@ With [CocoaPods](http://cocoapods.org/), add this line to your Podfile.
     }];
 }
 
+@end
+```
+
+#### Swift
+
+Use Bridging-Header
+
+```swift
+
+import JTTableViewController
+
+class ViewController: JTTableViewController {
+    
+    // If you don't implement this method, UITableViewAutomaticDimension will return by default
+    override func jt_tableView(tableView: UITableView!, heightForRowAtIndexPath indexPath: NSIndexPath!) -> CGFloat {
+        return 44.0
+    }
+    
+    // Must be implemented
+    override func jt_tableView(tableView: UITableView!, cellForRowAtIndexPath indexPath: NSIndexPath!) -> UITableViewCell! {
+        let cell = tableView.dequeueReusableCellWithIdentifier("cell", forIndexPath: indexPath)
+        
+        // Do whatever you want to use the data
+        cell.textLabel!.text = self.results[indexPath.row] as? String
+        
+        return cell
+    }
+
+    // Must be implemented
+    override func startFetchingResults() {
+        super.startFetchingResults()
+        
+        Service.retrieveData({ (error, results, haveMoreData) -> () in
+            if error {
+                self.didFailedToFetchResults()
+                return
+            }
+            
+            self.didFetchResults(results, haveMoreData: haveMoreData)
+        })
+    }
+
+    // Must be implemented if haveMoreData
+    override func startFetchingNextResults() {
+        super.startFetchingNextResults()
+        
+        Service.retrieveData({ (error, results, haveMoreData) -> () in
+            if error {
+                self.didFailedToFetchResults()
+                return
+            }
+            
+            self.didFetchNextResults(results, haveMoreData: haveMoreData)
+        })
+    }
 @end
 ```
 
