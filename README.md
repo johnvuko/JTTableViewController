@@ -140,7 +140,8 @@ class ViewController: JTTableViewController {
             self.didFetchNextResults(results, haveMoreData: haveMoreData)
         })
     }
-@end
+    
+}
 ```
 
 You have to bind the `tableView` with the controller, automatically it will set the delegate and the dataSource.
