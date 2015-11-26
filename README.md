@@ -5,7 +5,7 @@
 ![License](https://img.shields.io/cocoapods/l/JTTableViewController.svg)
 ![Platform](https://img.shields.io/cocoapods/p/JTTableViewController.svg)
 
-A ViewController for manage pagination and loaders for iOS.
+A ViewController with a tableView which manage pagination and loaders for iOS.
 
 ## Installation
 
