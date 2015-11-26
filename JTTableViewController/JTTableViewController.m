@@ -41,6 +41,8 @@
     self->_haveMoreData = NO;
     self->_results = [NSMutableArray new];
     self.nextPageLoaderOffset = 3;
+
+    self.tableView = [UITableView new];
 }
 
 - (void)viewWillAppear:(BOOL)animated
