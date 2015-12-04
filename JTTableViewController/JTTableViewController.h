@@ -134,4 +134,7 @@ if(__nextPageLoaderCell){\
  */
 - (UITableViewCell *)jt_tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath;
 
+
+- (void)commonInit;
+
 @end
