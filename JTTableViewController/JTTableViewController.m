@@ -113,7 +113,7 @@
     NSAssert(self.tableView, @"You have to set the tableView first");
 
     self->_noResultsView = noResultsView;
-    [self.tableView.superview addSubview:self.noResultsView];
+    [self.tableView.superview insertSubview:self.noResultsView aboveSubview:self.tableView];
     
     [self.noResultsView mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.edges.equalTo(self.tableView);

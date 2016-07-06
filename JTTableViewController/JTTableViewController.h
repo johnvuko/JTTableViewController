@@ -125,12 +125,12 @@ if(__nextPageLoaderCell){\
 
 
 /*!
- *  Use for Swift, override this method of tableView:heightForRowAtIndexPath:
+ *  Used for Swift, override this method instead of tableView:heightForRowAtIndexPath:
  */
 - (CGFloat)jt_tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath;
 
 /*!
- *  Use for Swift, override this method of tableView:cellForRowAtIndexPath:
+ *  Used for Swift, override this method instead of tableView:cellForRowAtIndexPath:
  */
 - (UITableViewCell *)jt_tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath;
 
