@@ -7,11 +7,11 @@
 
 import UIKit
 
-public class JTFullTableViewController<T>: JTTableViewController<T>, UITableViewDelegate, UITableViewDataSource {
+open class JTFullTableViewController<T>: JTTableViewController<T>, UITableViewDelegate, UITableViewDataSource {
 
-	public let refreshControl = UIRefreshControl()
+	open let refreshControl = UIRefreshControl()
 
-	public override func loadView () {
+	open override func loadView () {
 		super.loadView()
 
 		let tableView = UITableView()
@@ -25,7 +25,7 @@ public class JTFullTableViewController<T>: JTTableViewController<T>, UITableView
 		tableView.addSubview(refreshControl)
 	}
 
-   public override func didEndFetching () {
+   open override func didEndFetching () {
         super.didEndFetching()
         refreshControl.endRefreshing()
     }
