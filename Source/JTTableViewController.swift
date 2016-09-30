@@ -7,40 +7,40 @@
 
 import UIKit
 
-class JTTableViewController<T>: UIViewController {
+open class JTTableViewController<T>: UIViewController {
     
-    var tableView: UITableView?
-    var nextPageLoaderCell: UITableViewCell?
+    open var tableView: UITableView?
+    open var nextPageLoaderCell: UITableViewCell?
     
-    var noResultsView: UIView? {
+    open var noResultsView: UIView? {
         didSet {
             noResultsView?.isHidden = true
             noResultsView?.isUserInteractionEnabled = false
         }
     }
     
-    var noResultsLoadingView: UIView? {
+    open var noResultsLoadingView: UIView? {
         didSet {
             noResultsLoadingView?.isHidden = true
             noResultsLoadingView?.isUserInteractionEnabled = false
         }
     }
     
-    var errorView: UIView? {
+    open var errorView: UIView? {
         didSet {
             errorView?.isHidden = true
             errorView?.isUserInteractionEnabled = false
         }
     }
     
-    var nextPageLoaderOffset = 3
+    open var nextPageLoaderOffset = 3
     
-    private(set) var results = [T]()
-    private(set) var haveMoreResults = false
-    private(set) var isFetching = false
+    open private(set) var results = [T]()
+    open private(set) var haveMoreResults = false
+    open private(set) var isFetching = false
     
     // Use to directly have access to results
-    var unsafeResults: [T] {
+    open var unsafeResults: [T] {
         get {
             return results
         }
@@ -50,9 +50,9 @@ class JTTableViewController<T>: UIViewController {
     }
     
     // Used to ignore invalid / older requests
-    private(set) var lastRequestId = 0
+    open private(set) var lastRequestId = 0
     
-    func resetResults (scrollTop: Bool = false, scrollAnimated: Bool = true) {
+    open func resetResults (scrollTop: Bool = false, scrollAnimated: Bool = true) {
         results.removeAll()
         haveMoreResults = false
         isFetching = false
@@ -69,7 +69,7 @@ class JTTableViewController<T>: UIViewController {
         }
     }
     
-    func fetchResults () {
+    open func fetchResults () {
         isFetching = true
         lastRequestId += 1
         
@@ -81,14 +81,14 @@ class JTTableViewController<T>: UIViewController {
         }
     }
     
-    func fetchNextResults () {
+    open func fetchNextResults () {
         isFetching = true
         lastRequestId += 1
         
         hideErrorView()
     }
     
-    func didFetchResults (results: [T], haveMoreResults: Bool? = nil, lastRequestId: Int? = nil, completion: (()->())? = nil) {
+    open func didFetchResults (results: [T], haveMoreResults: Bool? = nil, lastRequestId: Int? = nil, completion: (()->())? = nil) {
         if let lastRequestId = lastRequestId {
             if self.lastRequestId != lastRequestId {
                 return
@@ -122,7 +122,7 @@ class JTTableViewController<T>: UIViewController {
         didEndFetching()
     }
     
-    func didFetchNextResults (results: [T], haveMoreResults: Bool? = nil, lastRequestId: Int? = nil, completion: (()->())? = nil) {
+    open func didFetchNextResults (results: [T], haveMoreResults: Bool? = nil, lastRequestId: Int? = nil, completion: (()->())? = nil) {
         if let lastRequestId = lastRequestId {
             if self.lastRequestId != lastRequestId {
                 return
@@ -150,7 +150,7 @@ class JTTableViewController<T>: UIViewController {
     }
     
     
-    func didFailedToFetchResults (error: Error? = nil) {
+    open func didFailedToFetchResults (error: Error? = nil) {
         isFetching = false
         
         hideNoResultsLoadingView()
@@ -159,37 +159,37 @@ class JTTableViewController<T>: UIViewController {
         didEndFetching()
     }
     
-    func showNoResultsLoadingView () {
+    open func showNoResultsLoadingView () {
         noResultsLoadingView?.isHidden = false
     }
     
-    func hideNoResultsLoadingView () {
+    open func hideNoResultsLoadingView () {
         noResultsLoadingView?.isHidden = true
     }
     
-    func showNoResultsView () {
+    open func showNoResultsView () {
         noResultsView?.isHidden = false
     }
     
-    func hideNoResultsView () {
+    open func hideNoResultsView () {
         noResultsView?.isHidden = true
     }
     
-    func showErrorView (error: Error? = nil) {
+    open func showErrorView (error: Error? = nil) {
         errorView?.isHidden = false
     }
     
-    func hideErrorView () {
+    open func hideErrorView () {
         errorView?.isHidden = true
     }
     
-    func didEndFetching () {
+    open func didEndFetching () {
         
     }
     
     //MARK: TableView delegate
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    open func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if (nextPageLoaderCell != nil) && haveMoreResults {
             return results.count + 1
         }
@@ -198,7 +198,7 @@ class JTTableViewController<T>: UIViewController {
     }
     
     @objc(tableView:heightForRowAtIndexPath:)
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    open func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if let nextPageLoaderCell = nextPageLoaderCell, haveMoreResults && indexPath.row >= results.count {
             return nextPageLoaderCell.frame.height
         }
@@ -206,12 +206,12 @@ class JTTableViewController<T>: UIViewController {
         return jt_tableView(tableView, heightForRowAt: indexPath)
     }
     
-    func jt_tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    open func jt_tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return UITableViewAutomaticDimension
     }
     
     @objc(tableView:cellForRowAtIndexPath:)
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    open func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if let nextPageLoaderCell = nextPageLoaderCell, haveMoreResults && indexPath.row >= results.count {
             return nextPageLoaderCell
         }
@@ -222,7 +222,7 @@ class JTTableViewController<T>: UIViewController {
         return jt_tableView(tableView, cellForRowAt: indexPath)
     }
 
-    func jt_tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    open func jt_tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         return UITableViewCell()
     }
         
