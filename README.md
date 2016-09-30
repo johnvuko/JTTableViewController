@@ -11,7 +11,7 @@ A ViewController with a tableView which manage pagination and loaders for iOS.
 
 With [CocoaPods](http://cocoapods.org/), add this line to your Podfile.
 
-    pod 'JTTableViewController', '~> 1.0'
+    pod 'JTTableViewController', '~> 2.0'
 
 ## Screenshots
 
@@ -19,162 +19,218 @@ With [CocoaPods](http://cocoapods.org/), add this line to your Podfile.
 
 ## Usage
 
-### Basic usage
+### Minimum usage
 
-#### Objective-C
-
-```objective-c
-#import <UIKit/UIKit.h>
-
-#import <JTTableViewController.h>
-
-@interface ViewController : JTTableViewController
-
-@end
-```
-
-```objective-c
-#import "ViewController.h"
-
-@implementation ViewController
-
-// If you don't implement this method, UITableViewAutomaticDimension will return by default
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Automatically return the height of nextPageLoaderCell, else return UITableViewAutomaticDimension
-    JTTABLEVIEW_heightForRowAtIndexPath
-    
-    return 44.;
-}
-
-// Must be implemented
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Automatically return nextPageLoaderCell and call startFetchingNextResults if needed
-    JTTABLEVIEW_cellForRowAtIndexPath
-    
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
-    
-    // Do whatever you want to use the data
-    cell.textLabel.text = self.results[indexPath.row];
-    
-    return cell;
-}
-
-// Must be implemented
-- (void)startFetchingResults
-{
-    [super startFetchingResults];
-    
-    [service retrieveDataWithOffset:0 success:^(NSArray *results, BOOL haveMoreData) {
-        [self didFetchResults:results haveMoreData:haveMoreData];
-    } failure:^{
-        [self didFailedToFetchResults];
-    }];
-}
-
-// Must be implemented if haveMoreData
-- (void)startFetchingNextResults
-{
-    [super startFetchingNextResults];
-    
-    [service retrieveDataWithOffset:self.results.count success:^(NSArray *results, BOOL haveMoreData) {
-        [self didFetchNextResults:results haveMoreData:haveMoreData];
-    } failure:^{
-        [self didFailedToFetchResults];
-    }];
-}
-
-@end
-```
-
-#### Swift
-
-Use Bridging-Header
+You have to create an `UITableView` and assign it to `self.tableView`, add it to the `self.view` and set the `delegate` and `dataSource` yourself.
+Or you can inherit from `JTFullTableViewController` instead of `JTTableViewController`.
 
 ```swift
-
 import JTTableViewController
 
-class ViewController: JTTableViewController {
+class ViewController: JTTableViewController<YourModel>, UITableViewDelegate, UITableViewDataSource {
     
-    // If you don't implement this method, UITableViewAutomaticDimension will return by default
-    override func jt_tableView(tableView: UITableView!, heightForRowAtIndexPath indexPath: NSIndexPath!) -> CGFloat {
-        return 44.0
-    }
+    // Used in this example to manage your pagingation
+    private var currentPage = 1
     
     // Must be implemented
-    override func jt_tableView(tableView: UITableView!, cellForRowAtIndexPath indexPath: NSIndexPath!) -> UITableViewCell! {
-        let cell = tableView.dequeueReusableCellWithIdentifier("cell", forIndexPath: indexPath)
-        
-        // Do whatever you want to use the data
-        cell.textLabel!.text = self.results[indexPath.row] as? String
-        
+    override func jt_tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell")
+        let anInstanceOfYourModel = self.results[indexPath.row]
+        /*
+            whatever you wanna do with `anInstanceOfYourModel` and your `cell`
+        */
         return cell
     }
 
     // Must be implemented
-    override func startFetchingResults() {
-        super.startFetchingResults()
+    override func fetchResults() {
+        super.fetchResults()
         
-        Service.retrieveData({ (error, results, haveMoreData) -> () in
-            if error {
-                self.didFailedToFetchResults()
+        currentPage = 1
+        
+        // `lastRequestId` is used to avoid problem with parallel requests
+        let lastRequestId = self.lastRequestId
+        
+        YourService.retrieveData(page: currentPage) { (error, results) -> () in
+            if let error = error {
+                self.didFailedToFetchResults(error: error)
                 return
             }
-            
-            self.didFetchResults(results, haveMoreData: haveMoreData)
+            self.didFetchResults(results, lastRequestId: lastRequestId) {
+                // this block is executed if `lastRequestId` matched with `self.lastRequestId`
+                self.currentPage += 1
+            }
         })
     }
 
-    // Must be implemented if haveMoreData
-    override func startFetchingNextResults() {
-        super.startFetchingNextResults()
+    // Must be implemented
+    override func fetchNextResults() {
+        super.fetchNextResults()
         
-        Service.retrieveData({ (error, results, haveMoreData) -> () in
-            if error {
-                self.didFailedToFetchResults()
-                return
+        // `lastRequestId` is used to avoid problem with parallel requests
+        let lastRequestId = self.lastRequestId
+        
+        YourService.retrieveData(page: currentPage) { (error, results) -> () in
+            if let error = error {
+                self.didFailedToFetchResults(error: error)
             }
-            
-            self.didFetchNextResults(results, haveMoreData: haveMoreData)
+            else {
+                self.didFetchNextResults(results, lastRequestId: lastRequestId) {
+                    // this block is executed if `lastRequestId` matched with `self.lastRequestId`
+                    self.currentPage += 1
+                }
+            }
         })
     }
     
 }
 ```
 
-You have to bind the `tableView` with the controller, automatically it will set the delegate and the dataSource.
+### Advanced usage
 
-You have to implement `startFetchingResults` and `startFetchingNextResults` methods. They are used to load data (from your web service for example). These methods must call `super`.
+```swift
+import JTTableViewController
 
-`startFetchingResults` is used to retrieve new data (erase all previous data) whereas `startFetchingNextResults` is used for get more data (the pagination).
+class ViewController: JTTableViewController<YourModel>, UITableViewDelegate, UITableViewDataSource {
+    
+    // Used in this example to manage your pagingation
+    private var currentPage = 1
+    
+    private let refreshControl = UIRefreshControl()
+    
+    override func viewDidLoad () {
+        super.viewDidLoad()
+        
+        // `nextPageLoaderCell` is an `UITableViewCell`
+        self.nextPageLoaderCell = MyNextPageLoadCell()
+        
+        // `fecthResults` is call 5 cells before `nextPageLoaderCell` become visible
+        self.nextPageLoaderOffset = 5
+        
+        // `noResultsView` is display when `didFetchResults` is called with an `results` empty
+        let noResultsView = NoResultsView()
+        self.noResultsView = noResultsView
+        self.view.addSubview(noResultsView)
+        // something better than frame with Constraints but not relevant here
+        noResultsView.frame = self.view.bounds
 
-`didFetchResults:haveMoreData:` must be call when `startFetchingResults` have successfuly retrieve data.
+        // `noResultsLoadingView` is display when `fetchResults` is called and `results` is empty
+        let noResultsLoadingView = NoResultsLoadingView()
+        self.noResultsLoadingView = noResultsLoadingView
+        self.view.addSubview(noResultsLoadingView)
+        // something better than frame with Constraints but not relevant here
+        noResultsLoadingView.frame = self.view.bounds
 
-`didFetchNextResults:haveMoreData:` must be call when `startFetchingNextResults` have successfuly retrieve data.
+        // `errorView` is display when `didFailedToFetchResults` is called
+        let errorView = ErrorView()
+        self.errorView = errorView
+        self.view.addSubview(errorView)
+        // something better than frame with Constraints but not relevant here
+        errorView.frame = self.view.bounds
+        
+        refreshControl.addTarget(self, action: #selector(fetchResults), for: .valueChanged)
+        self.tableView?.addSubview(refreshControl)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        fetchResults()
+    }
+    
+    // Must be implemented
+    override func jt_tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell")
+        let anInstanceOfYourModel = self.results[indexPath.row]
+        /*
+            whatever you wanna do with `anInstanceOfYourModel` and your `cell`
+        */
+        return cell
+    }
 
-`didFailedToFetchResults` must be call if `startFetchingResults` or `startFetchingNextResults` have failed to retrieve data.
+    // Must be implemented
+    override func fetchResults() {
+        self.resetResults()
+    
+        super.fetchResults()
+        
+        currentPage = 1
+        
+        // `lastRequestId` is used to avoid problem with parallel requests
+        let lastRequestId = self.lastRequestId
+        
+        YourService.retrieveData(page: currentPage) { (error, results) -> () in
+            if let error = error {
+                self.didFailedToFetchResults(error: error)
+                return
+            }
+            self.didFetchResults(results, lastRequestId: lastRequestId) {
+                // this block is executed if `lastRequestId` matched with `self.lastRequestId`
+                self.currentPage += 1
+            }
+        })
+    }
+
+    // Must be implemented
+    override func fetchNextResults() {
+        super.fetchNextResults()
+        
+        // `lastRequestId` is used to avoid problem with parallel requests
+        let lastRequestId = self.lastRequestId
+        
+        YourService.retrieveData(page: currentPage) { (error, results) -> () in
+            if let error = error {
+                self.didFailedToFetchResults(error: error)
+            }
+            else {
+                self.didFetchNextResults(results, lastRequestId: lastRequestId) {
+                    // this block is executed if `lastRequestId` matched with `self.lastRequestId`
+                    self.currentPage += 1
+                }
+            }
+        })
+    }
+    
+    override func didEndFetching () {
+        super.didEndFetching()
+        refreshControl.endRefreshing()
+    }
+    
+}
+```
+
+You have to implement `fetchResults` and `fetchNextResults` methods. They are used to load data (from your web service for example). These methods must call `super`.
+
+`fetchResults` is used to retrieve new data (erase all previous data) whereas `fetchNextResults` is used for get more data (the pagination).
+
+`didFetchResults` must be call when `fetchResults` have successfuly retrieve data.
+`didFetchNextResults` must be call when `fetchNextResults` have successfuly retrieve data.
+`didFailedToFetchResults` must be call if `didFetchResults` or `didFetchNextResults` have failed to retrieve data.
+
+`didEndFetching` is called after `didFetchResults`, `didFetchNextResults` or `didFailedToFetchResults`
 
 The data are stored in `results`. Just use `self.results` to access to them.
+If you want to remove some elements in `results` you can use `self.unsafeResults`, only in specific case (ex: removing one cell).
 
 There are some properties you can customize:
 - `nextPageLoaderCell` is the loader use for the pagination, it's a `UITableViewCell`
-- `noResultsView` is the view display when the results get from your webservice are empty
+- `noResultsView` is the view display when the results get from your service are empty
 - `noResultsLoadingView` is the view display when there is no results and you start fetching new data, used for the first load
-- `nextPageLoaderOffset` is the number of cells require before the last cell for calling `startFetchingNextResults`, by default it's 3
+- `errorView` is the view display `didFailedToFetchResults` is called
+- `nextPageLoaderOffset` is the number of cells require before the last cell for calling `fetchNextResults`, by default it's 3
 
 You can also override some methods:
-- `showNoResultsView`
-- `hideNoResultsView`
+- `didEndFetching`
 - `showNoResultsLoadingView`
 - `hideNoResultsLoadingView`
-- `endRefreshing`
+- `showNoResultsView`
+- `hideNoResultsView`
+- `showErrorView`
+- `hideErrorView`
 
 ## Requirements
 
-- iOS 7 or higher
-- Automatic Reference Counting (ARC)
+- iOS 8.0 or higher
+- Swift 3.0
 
 ## Author
 
