@@ -7,9 +7,9 @@
 
 import UIKit
 
-class JTFullTableViewController<T>: JTTableViewController<T>, UITableViewDelegate, UITableViewDataSource {
+public class JTFullTableViewController<T>: JTTableViewController<T>, UITableViewDelegate, UITableViewDataSource {
 
-	private let refreshControl = UIRefreshControl()
+	let refreshControl = UIRefreshControl()
 
 	override func loadView () {
 		super.loadView()

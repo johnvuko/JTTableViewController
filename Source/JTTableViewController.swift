@@ -7,7 +7,7 @@
 
 import UIKit
 
-class JTTableViewController<T>: UIViewController {
+public class JTTableViewController<T>: UIViewController {
     
     var tableView: UITableView?
     var nextPageLoaderCell: UITableViewCell?
