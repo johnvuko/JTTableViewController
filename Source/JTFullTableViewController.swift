@@ -18,10 +18,8 @@ open class JTFullTableViewController<T>: JTTableViewController<T>, UITableViewDe
 		self.view.addSubview(tableView)
 		self.tableView = tableView
 
-		self.view.addConstraint(NSLayoutConstraint(item: tableView, attribute: .top, relatedBy: .equal, toItem: self.view, attribute: .top, multiplier: 1.0, constant: 0.0))
-		self.view.addConstraint(NSLayoutConstraint(item: tableView, attribute: .leading, relatedBy: .equal, toItem: self.view, attribute: .leading, multiplier: 1.0, constant: 0.0))
-		self.view.addConstraint(NSLayoutConstraint(item: self.view, attribute: .bottom, relatedBy: .equal, toItem: tableView, attribute: .bottom, multiplier: 1.0, constant: 0.0))
-		self.view.addConstraint(NSLayoutConstraint(item: self.view, attribute: .trailing, relatedBy: .equal, toItem: tableView, attribute: .trailing, multiplier: 1.0, constant: 0.0))
+        tableView.frame = self.view.bounds
+        tableView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
 
 		tableView.dataSource = self
 		tableView.delegate = self
