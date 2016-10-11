@@ -53,7 +53,7 @@ class ViewController: JTTableViewController<YourModel>, UITableViewDelegate, UIT
         
         YourService.retrieveData(page: currentPage) { (error, results) -> () in
             if let error = error {
-                self.didFailedToFetchResults(error: error)
+                self.didFailedToFetchResults(error: error, lastRequestId: lastRequestId)
                 return
             }
             self.didFetchResults(results, lastRequestId: lastRequestId) {
@@ -72,7 +72,7 @@ class ViewController: JTTableViewController<YourModel>, UITableViewDelegate, UIT
         
         YourService.retrieveData(page: currentPage) { (error, results) -> () in
             if let error = error {
-                self.didFailedToFetchResults(error: error)
+                self.didFailedToFetchResults(error: error, lastRequestId: lastRequestId)
             }
             else {
                 self.didFetchNextResults(results, lastRequestId: lastRequestId) {
@@ -160,7 +160,7 @@ class ViewController: JTTableViewController<YourModel>, UITableViewDelegate, UIT
         
         YourService.retrieveData(page: currentPage) { (error, results) -> () in
             if let error = error {
-                self.didFailedToFetchResults(error: error)
+                self.didFailedToFetchResults(error: error, lastRequestId: lastRequestId)
                 return
             }
             self.didFetchResults(results, lastRequestId: lastRequestId) {
@@ -179,7 +179,7 @@ class ViewController: JTTableViewController<YourModel>, UITableViewDelegate, UIT
         
         YourService.retrieveData(page: currentPage) { (error, results) -> () in
             if let error = error {
-                self.didFailedToFetchResults(error: error)
+                self.didFailedToFetchResults(error: error, lastRequestId: lastRequestId)
             }
             else {
                 self.didFetchNextResults(results, lastRequestId: lastRequestId) {

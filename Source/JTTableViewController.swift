@@ -150,7 +150,13 @@ open class JTTableViewController<T>: UIViewController {
     }
     
     
-    open func didFailedToFetchResults (error: Error? = nil) {
+    open func didFailedToFetchResults (error: Error? = nil, lastRequestId: Int? = nil) {
+        if let lastRequestId = lastRequestId {
+            if self.lastRequestId != lastRequestId {
+                return
+            }
+        }
+        
         isFetching = false
         
         hideNoResultsLoadingView()
