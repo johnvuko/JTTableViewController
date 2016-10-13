@@ -56,7 +56,7 @@ open class JTTableViewController<T>: UIViewController {
         results.removeAll()
         haveMoreResults = false
         isFetching = false
-        lastRequestId = 0
+        lastRequestId += 1
         
         hideNoResultsView()
         hideNoResultsLoadingView()
