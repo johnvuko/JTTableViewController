@@ -13,6 +13,15 @@ With [CocoaPods](http://cocoapods.org/), add this line to your Podfile.
 
     pod 'JTTableViewController', '~> 2.0'
 
+## What's in it?
+
+- avoid parallel requests problem (you start two requests and the first one finish after the second), last request is the only one we want to use
+- easily manage pagination 
+- display a view for the first loading (when your `tableView` is empty)
+- display a view when there is no results to your first request
+- display a loader view (an `UITableViewCell`) for indicate the next page is loading
+- display a view for errors
+
 ## Screenshots
 
 ![Example](./Screens/example.gif "Example View")
