@@ -18,8 +18,8 @@ open class JTFullTableViewController<T>: JTTableViewController<T>, UITableViewDe
 		self.view.addSubview(tableView)
 		self.tableView = tableView
 
-        tableView.frame = self.view.bounds
-        tableView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
+		tableView.frame = self.view.bounds
+		tableView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
 
 		tableView.dataSource = self
 		tableView.delegate = self

@@ -149,7 +149,6 @@ open class JTTableViewController<T>: UIViewController {
         didEndFetching()
     }
     
-    
     open func didFailedToFetchResults (error: Error? = nil, lastRequestId: Int? = nil) {
         if let lastRequestId = lastRequestId {
             if self.lastRequestId != lastRequestId {
@@ -195,6 +194,7 @@ open class JTTableViewController<T>: UIViewController {
     
     //MARK: TableView delegate
     
+    @objc(tableView:numberOfRowsInSection:)
     open func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if (nextPageLoaderCell != nil) && haveMoreResults {
             return results.count + 1
