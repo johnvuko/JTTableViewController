@@ -236,6 +236,30 @@ You can also override some methods:
 - `showErrorView`
 - `hideErrorView`
 
+## Subclassing notes
+
+If you want to subclass `JTTableViewController` or `JTFullTableViewController`, the methods from `UITableViewDelegate` and `UITableViewDataSource` must have an `@objc` annotation.
+
+```swift
+class XXTableViewController<T>: JTTableViewController<T> {
+    /*
+    ... Here you add whatever you want to add
+    */
+}
+
+class MyViewController: XXTableViewController<YourModel> {
+
+    // if you don't add `@objc(tableView:didSelectRowAtIndexPath:)` this method is not called
+    @objc(tableView:didSelectRowAtIndexPath:)
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        /*
+        ...
+        /*
+    }
+
+}
+```
+
 ## Requirements
 
 - iOS 8.0 or higher
