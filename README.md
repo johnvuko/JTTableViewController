@@ -65,7 +65,7 @@ class ViewController: JTTableViewController<YourModel>, UITableViewDelegate, UIT
                 self.didFailedToFetchResults(error: error, lastRequestId: lastRequestId)
                 return
             }
-            self.didFetchResults(results, lastRequestId: lastRequestId) {
+            self.didFetchResults(results: results: results, lastRequestId: lastRequestId) {
                 // this block is executed if `lastRequestId` matched with `self.lastRequestId`
                 self.currentPage += 1
             }
@@ -84,7 +84,7 @@ class ViewController: JTTableViewController<YourModel>, UITableViewDelegate, UIT
                 self.didFailedToFetchResults(error: error, lastRequestId: lastRequestId)
             }
             else {
-                self.didFetchNextResults(results, lastRequestId: lastRequestId) {
+                self.didFetchNextResults(results: results: results, lastRequestId: lastRequestId) {
                     // this block is executed if `lastRequestId` matched with `self.lastRequestId`
                     self.currentPage += 1
                 }
@@ -172,7 +172,7 @@ class ViewController: JTTableViewController<YourModel>, UITableViewDelegate, UIT
                 self.didFailedToFetchResults(error: error, lastRequestId: lastRequestId)
                 return
             }
-            self.didFetchResults(results, lastRequestId: lastRequestId) {
+            self.didFetchResults(results: results, lastRequestId: lastRequestId) {
                 // this block is executed if `lastRequestId` matched with `self.lastRequestId`
                 self.currentPage += 1
             }
@@ -191,7 +191,7 @@ class ViewController: JTTableViewController<YourModel>, UITableViewDelegate, UIT
                 self.didFailedToFetchResults(error: error, lastRequestId: lastRequestId)
             }
             else {
-                self.didFetchNextResults(results, lastRequestId: lastRequestId) {
+                self.didFetchNextResults(results: results, lastRequestId: lastRequestId) {
                     // this block is executed if `lastRequestId` matched with `self.lastRequestId`
                     self.currentPage += 1
                 }

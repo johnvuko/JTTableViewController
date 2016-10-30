@@ -1,7 +1,5 @@
 PODS:
-  - JTTableViewController (1.0.0):
-    - Masonry
-  - Masonry (0.6.1)
+  - JTTableViewController (2.0.11)
 
 DEPENDENCIES:
   - JTTableViewController (from `..`)
@@ -11,7 +9,8 @@ EXTERNAL SOURCES:
     :path: ..
 
 SPEC CHECKSUMS:
-  JTTableViewController: 35e8d59a4087a7d1cd415cf78c71610ddb682e59
-  Masonry: 4972309f2f134de9dd312f4dc4a21359b50e6caa
+  JTTableViewController: 6fe0c45ceeb043195ce84c4c2575cdbcc25301d7
 
-COCOAPODS: 0.35.0
+PODFILE CHECKSUM: d1393c69b80fdf59d735ab405993c4e9e338446b
+
+COCOAPODS: 1.1.0.rc.2

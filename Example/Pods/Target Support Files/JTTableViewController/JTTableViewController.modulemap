@@ -1,0 +1,6 @@
+framework module JTTableViewController {
+  umbrella header "JTTableViewController-umbrella.h"
+
+  export *
+  module * { export * }
+}

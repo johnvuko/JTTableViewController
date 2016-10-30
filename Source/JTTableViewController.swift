@@ -9,24 +9,24 @@ import UIKit
 
 open class JTTableViewController<T>: UIViewController {
     
-    open var tableView: UITableView?
-    open var nextPageLoaderCell: UITableViewCell?
+    @IBOutlet open var tableView: UITableView?
+    @IBOutlet open var nextPageLoaderCell: UITableViewCell?
     
-    open var noResultsView: UIView? {
+    @IBOutlet open var noResultsView: UIView? {
         didSet {
             noResultsView?.isHidden = true
             noResultsView?.isUserInteractionEnabled = false
         }
     }
     
-    open var noResultsLoadingView: UIView? {
+    @IBOutlet open var noResultsLoadingView: UIView? {
         didSet {
             noResultsLoadingView?.isHidden = true
             noResultsLoadingView?.isUserInteractionEnabled = false
         }
     }
     
-    open var errorView: UIView? {
+    @IBOutlet open var errorView: UIView? {
         didSet {
             errorView?.isHidden = true
             errorView?.isUserInteractionEnabled = false
