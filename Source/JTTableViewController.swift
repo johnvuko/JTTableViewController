@@ -115,11 +115,11 @@ open class JTTableViewController<T>: UIViewController {
             showNoResultsView()
         }
         
+        didEndFetching()
+
         if let completion = completion {
             completion()
         }
-
-        didEndFetching()
     }
     
     open func didFetchNextResults (results: [T], haveMoreResults: Bool? = nil, lastRequestId: Int? = nil, completion: (()->())? = nil) {
@@ -142,14 +142,14 @@ open class JTTableViewController<T>: UIViewController {
         
         tableView?.reloadData()
                 
-        if let completion = completion {
+        didEndFetching()
+
+      if let completion = completion {
             completion()
         }
-
-        didEndFetching()
     }
     
-    open func didFailedToFetchResults (error: Error? = nil, lastRequestId: Int? = nil) {
+    open func didFailedToFetchResults (error: Error? = nil, lastRequestId: Int? = nil, completion: (()->())? = nil) {
         if let lastRequestId = lastRequestId {
             if self.lastRequestId != lastRequestId {
                 return
@@ -162,6 +162,10 @@ open class JTTableViewController<T>: UIViewController {
         showErrorView(error: error)
 
         didEndFetching()
+
+        if let completion = completion {
+            completion()
+        }
     }
     
     open func showNoResultsLoadingView () {
