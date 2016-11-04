@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "JTTableViewController"
-  s.version      = "2.0.12"
+  s.version      = "2.1.0"
   s.summary      = "A ViewController with a tableView which manage pagination and loaders for iOS."
   s.homepage     = "https://github.com/jonathantribouharet/JTTableViewController"
   s.license      = { :type => 'MIT' }

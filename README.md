@@ -209,6 +209,8 @@ class ViewController: JTTableViewController<YourModel>, UITableViewDelegate, UIT
 
 You have to implement `fetchResults` and `fetchNextResults` methods. They are used to load data (from your web service for example). These methods must call `super`.
 
+Optionaly, you can override `jt_tableView(tableView:heightForRowAt:)` for defining the height of cells.
+
 `fetchResults` is used to retrieve new data (erase all previous data) whereas `fetchNextResults` is used for get more data (the pagination).
 
 `didFetchResults` must be call when `fetchResults` have successfuly retrieve data.
@@ -235,6 +237,29 @@ You can also override some methods:
 - `hideNoResultsView`
 - `showErrorView`
 - `hideErrorView`
+
+### Sections
+
+`JTTableViewController` support section management. You just have to override 2 method:
+- `numberOfSections(tableView:)`
+- `jt_tableView(tableView:numberOfRowsInSection:)`
+
+```swift
+import JTTableViewController
+
+class ViewController: JTTableViewController<[Int: [YourModel]]>, UITableViewDelegate, UITableViewDataSource {
+
+    @objc(numberOfSectionsInTableView:)
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        return self.results.count
+    }
+
+   override func jt_tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return results[section].count
+    }
+
+}
+```
 
 ## Subclassing notes
 

@@ -104,7 +104,7 @@ open class JTTableViewController<T>: UIViewController {
         else {
             self.haveMoreResults = results.count > 0
         }
-
+        
         isFetching = false
         
         tableView?.reloadData()
@@ -116,7 +116,7 @@ open class JTTableViewController<T>: UIViewController {
         }
         
         didEndFetching()
-
+        
         if let completion = completion {
             completion()
         }
@@ -141,10 +141,10 @@ open class JTTableViewController<T>: UIViewController {
         }
         
         tableView?.reloadData()
-                
+        
         didEndFetching()
-
-      if let completion = completion {
+        
+        if let completion = completion {
             completion()
         }
     }
@@ -160,9 +160,9 @@ open class JTTableViewController<T>: UIViewController {
         
         hideNoResultsLoadingView()
         showErrorView(error: error)
-
+        
         didEndFetching()
-
+        
         if let completion = completion {
             completion()
         }
@@ -198,18 +198,66 @@ open class JTTableViewController<T>: UIViewController {
     
     //MARK: TableView delegate
     
-    @objc(tableView:numberOfRowsInSection:)
-    open func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if (nextPageLoaderCell != nil) && haveMoreResults {
-            return results.count + 1
+    open func canShowNextPageLoaderCell (tableView: UITableView? = nil, section: Int? = nil, row: Int? = nil) -> Bool {
+        if nextPageLoaderCell != nil, haveMoreResults {
+            if let tableView = tableView, let section = section {
+                // if not last section
+                if self.numberOfSections(in: tableView) != section + 1 {
+                    return false
+                }
+                
+                if let row = row {
+                    // if not last row => nextPageLoaderCell
+                    if self.tableView(tableView, numberOfRowsInSection: section) != row + 1 {
+                        return false
+                    }
+                }
+            }
+            
+            return true
         }
         
+        return false
+    }
+    
+    open func shouldFetchNextResults(tableView: UITableView, indexPath: IndexPath) -> Bool {
+        if self.isFetching || !self.haveMoreResults || self.nextPageLoaderCell == nil {
+            return false
+        }
+        
+        // if not last section
+        if self.numberOfSections(in: tableView) != indexPath.section + 1 {
+            return false
+        }
+        
+        if indexPath.row >= self.tableView(tableView, numberOfRowsInSection: indexPath.section) - (self.nextPageLoaderOffset + 1) {
+            return true
+        }
+        
+        return false
+    }
+    
+    @objc(numberOfSectionsInTableView:)
+    open func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+    
+    @objc(tableView:numberOfRowsInSection:)
+    open func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if canShowNextPageLoaderCell(tableView: tableView, section: section) {
+            return jt_tableView(tableView, numberOfRowsInSection: section) + 1
+        }
+        
+        return jt_tableView(tableView, numberOfRowsInSection: section)
+    }
+    
+    open func jt_tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return results.count
     }
     
     @objc(tableView:heightForRowAtIndexPath:)
     open func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if let nextPageLoaderCell = nextPageLoaderCell, haveMoreResults && indexPath.row >= results.count {
+        if canShowNextPageLoaderCell(tableView: tableView, section: indexPath.section, row: indexPath.row), let nextPageLoaderCell = nextPageLoaderCell {
             return nextPageLoaderCell.frame.height
         }
         
@@ -222,18 +270,22 @@ open class JTTableViewController<T>: UIViewController {
     
     @objc(tableView:cellForRowAtIndexPath:)
     open func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if let nextPageLoaderCell = nextPageLoaderCell, haveMoreResults && indexPath.row >= results.count {
+        if canShowNextPageLoaderCell(tableView: tableView, section: indexPath.section, row: indexPath.row), let nextPageLoaderCell = nextPageLoaderCell {
+            if !self.isFetching {
+                fetchNextResults()
+            }
             return nextPageLoaderCell
         }
-        else if(!self.isFetching && indexPath.row >= self.results.count - self.nextPageLoaderOffset && self.haveMoreResults){
+        
+        if shouldFetchNextResults(tableView: tableView, indexPath: indexPath) {
             fetchNextResults()
         }
-
+        
         return jt_tableView(tableView, cellForRowAt: indexPath)
     }
-
+    
     open func jt_tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         return UITableViewCell()
     }
-        
+    
 }
