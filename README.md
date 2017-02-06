@@ -30,8 +30,9 @@ With [CocoaPods](http://cocoapods.org/), add this line to your Podfile.
 
 ### Minimum usage
 
-You have to create an `UITableView` and assign it to `self.tableView`, add it to the `self.view` and set the `delegate` and `dataSource` yourself.
-Or you can inherit from `JTFullTableViewController` instead of `JTTableViewController`.
+You can either use `JTFullTableViewController` which is almost like `UITableViewController`.
+Or you can inherit from `JTTableViewController`,`UITableViewDelegate`, `UITableViewDataSource`, create an `UITableView`, assign it to `self.tableView`, add it to the `self.view` and set the `delegate` and `dataSource` yourself.
+If your controller is fullscreen use `JTFullTableViewController` else use `JTTableViewController`.
 
 ```swift
 import JTTableViewController
@@ -69,7 +70,7 @@ class ViewController: JTTableViewController<YourModel>, UITableViewDelegate, UIT
                 // this block is executed if `lastRequestId` matched with `self.lastRequestId`
                 self.currentPage += 1
             }
-        })
+        }
     }
 
     // Must be implemented
@@ -89,7 +90,7 @@ class ViewController: JTTableViewController<YourModel>, UITableViewDelegate, UIT
                     self.currentPage += 1
                 }
             }
-        })
+        }
     }
     
 }
@@ -176,7 +177,7 @@ class ViewController: JTTableViewController<YourModel>, UITableViewDelegate, UIT
                 // this block is executed if `lastRequestId` matched with `self.lastRequestId`
                 self.currentPage += 1
             }
-        })
+        }
     }
 
     // Must be implemented
@@ -196,7 +197,7 @@ class ViewController: JTTableViewController<YourModel>, UITableViewDelegate, UIT
                     self.currentPage += 1
                 }
             }
-        })
+        }
     }
     
     override func didEndFetching () {
