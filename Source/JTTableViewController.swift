@@ -69,7 +69,7 @@ open class JTTableViewController<T>: UIViewController {
         }
     }
     
-    open func fetchResults () {
+    @objc open func fetchResults () {
         isFetching = true
         lastRequestId += 1
         
