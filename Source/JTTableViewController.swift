@@ -265,7 +265,7 @@ open class JTTableViewController<T>: UIViewController {
     }
     
     open func jt_tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return UITableViewAutomaticDimension
+        return UITableView.automaticDimension
     }
     
     @objc(tableView:cellForRowAtIndexPath:)
