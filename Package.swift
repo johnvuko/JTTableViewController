@@ -1,5 +1,6 @@
 import PackageDescription
 
 let package = Package(
-	name: "JTTableViewController"
+	name: "JTTableViewController",
+	swiftLanguageVersions: [4]
 )

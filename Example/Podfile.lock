@@ -1,5 +1,5 @@
 PODS:
-  - JTTableViewController (2.1.3)
+  - JTTableViewController (2.1.4)
 
 DEPENDENCIES:
   - JTTableViewController (from `..`)
@@ -9,7 +9,7 @@ EXTERNAL SOURCES:
     :path: ".."
 
 SPEC CHECKSUMS:
-  JTTableViewController: a9c2312b138984d9add6966592610f2732c06cd6
+  JTTableViewController: a59f53652ad68881f5ab31ec69d6d01b27db5615
 
 PODFILE CHECKSUM: d1393c69b80fdf59d735ab405993c4e9e338446b
 
